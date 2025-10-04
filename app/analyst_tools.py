@@ -22,3 +22,15 @@ import pandas as pd
 
 # ---------------- Tools: every one queries the real scored DataFrame ----------------
 
+def get_market_summary(df: pd.DataFrame, site_label: str) -> dict:
+    row = df[df["label"].str.contains(site_label, case=False, na=False)]
+    if row.empty:
+        return {}
+    r = row.iloc[0]
+    return {
+        "site": r["label"], "opportunity_score": r["opportunity_score"], "demand": r["demand_label"],
+        "competition": r["competition_label"], "cannibalization_risk": r["cannibalization_risk_level"],
+        "segment": r["cluster_name"],
+    }
+
+
