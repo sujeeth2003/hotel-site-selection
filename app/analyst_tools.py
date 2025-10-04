@@ -34,3 +34,11 @@ def get_market_summary(df: pd.DataFrame, site_label: str) -> dict:
     }
 
 
+def rank_markets(df: pd.DataFrame, n: int = 5, ascending: bool = False) -> pd.DataFrame:
+    return df.nlargest(n, "opportunity_score") if not ascending else df.nsmallest(n, "opportunity_score")
+
+
+def low_cannibalization_top(df: pd.DataFrame, n: int = 5) -> pd.DataFrame:
+    return df[df["cannibalization_risk_level"].isin(["Low", "Moderate"])].nlargest(n, "opportunity_score")
+
+
