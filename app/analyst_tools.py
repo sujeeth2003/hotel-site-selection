@@ -88,3 +88,21 @@ def answer_question(question: str, df: pd.DataFrame) -> str:
             return "No candidate sites currently combine high demand with low/moderate competition in this dataset."
         return "**Markets with high demand and low/moderate competition:**\n\n" + "\n\n".join(_fmt_row(r) for _, r in rows.iterrows())
 
+    if "compare" in q:
+        names = re.findall(r"[A-Z][a-zA-Z\.\-]+(?:\s[A-Z][a-zA-Z\.\-]+)*", question)
+        if len(names) >= 2:
+            try:
+                a, b = compare_markets(df, names[0], names[1])
+                diff = a["opportunity_score"] - b["opportunity_score"]
+                higher, lower = (a, b) if diff >= 0 else (b, a)
+                return (f"**{a['label']}**: {a['opportunity_score']:.0f} vs **{b['label']}**: {b['opportunity_score']:.0f}\n\n"
+                        f"{higher['label']} scores {abs(diff):.1f} points higher, driven primarily by "
+                        f"{'stronger demand' if higher['demand_score'] > lower['demand_score'] else 'better accessibility' if higher['accessibility_score'] > lower['accessibility_score'] else 'lower competitive pressure'}.")
+            except IndexError:
+                pass
+        top2 = rank_markets(df, 2)
+        a, b = top2.iloc[0], top2.iloc[1]
+        return (f"Comparing the two top-ranked markets — **{a['label']}** ({a['opportunity_score']:.0f}) vs "
+                f"**{b['label']}** ({b['opportunity_score']:.0f}): {a['label']} leads mainly on "
+                f"{'demand' if a['demand_score'] > b['demand_score'] else 'accessibility'}.")
+
