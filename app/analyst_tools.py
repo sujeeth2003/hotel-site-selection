@@ -106,3 +106,15 @@ def answer_question(question: str, df: pd.DataFrame) -> str:
                 f"**{b['label']}** ({b['opportunity_score']:.0f}): {a['label']} leads mainly on "
                 f"{'demand' if a['demand_score'] > b['demand_score'] else 'accessibility'}.")
 
+    if "risk" in q:
+        rows = df[df["cannibalization_risk_level"].isin(["High", "Very High"])].nlargest(5, "opportunity_score")
+        if rows.empty:
+            return "No high-opportunity sites currently carry high/very-high cannibalization risk."
+        return "**High-opportunity sites that also carry elevated cannibalization risk:**\n\n" + "\n\n".join(_fmt_row(r) for _, r in rows.iterrows())
+
+    # default: top 5 overview
+    rows = rank_markets(df, 5)
+    return ("I can answer questions about demand, competition, cannibalization, and rankings. "
+            "Here are the current top 5 markets by opportunity score:\n\n" + "\n\n".join(_fmt_row(r) for _, r in rows.iterrows()))
+
+
