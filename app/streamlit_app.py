@@ -49,3 +49,15 @@ st.markdown(f"""
 </style>
 """, unsafe_allow_html=True)
 
+
+@st.cache_data
+def load_data():
+    scored = pd.read_parquet(DATA_DIR / "scored_candidates.parquet")
+    hotels = pd.read_parquet(DATA_DIR / "hotels.parquet")
+    model_results = pd.read_csv(DATA_DIR / "model_comparison.csv")
+    importances = pd.read_csv(DATA_DIR / "feature_importance.csv")
+    with open(DATA_DIR / "model_meta.json") as f:
+        meta = json.load(f)
+    return scored, hotels, model_results, importances, meta
+
+
