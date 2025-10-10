@@ -61,3 +61,22 @@ def load_data():
     return scored, hotels, model_results, importances, meta
 
 
+def recompute_weights(feat_raw_cols, weights):
+    from src.geospatial.features import build_site_features  # noqa
+    return compute_opportunity_score(st.session_state["_base_features"], weights)
+
+
+try:
+    scored_default, hotels, model_results, importances, meta = load_data()
+except FileNotFoundError:
+    st.error("No pipeline output found. Run `python run_pipeline.py` first to generate data/processed/*.parquet.")
+    st.stop()
+
+if "_base_features" not in st.session_state:
+    # keep the pre-score feature table around so weight sliders can recompute without re-running geospatial joins
+    from src.scoring.opportunity_score import compute_component_scores
+    st.session_state["_base_features"] = scored_default.drop(
+        columns=[c for c in scored_default.columns if c.endswith(("_score", "_penalty", "_label", "_level")) or c in
+                 ["opportunity_score", "cluster_id", "cluster_name"]], errors="ignore"
+    )
+
