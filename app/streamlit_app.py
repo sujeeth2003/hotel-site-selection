@@ -80,3 +80,19 @@ if "_base_features" not in st.session_state:
                  ["opportunity_score", "cluster_id", "cluster_name"]], errors="ignore"
     )
 
+# ---------------- Sidebar: navigation + score weight controls ----------------
+st.sidebar.markdown("### Hotel Market Opportunity Engine")
+st.sidebar.caption("DC · Maryland · Northern Virginia demo region")
+page = st.sidebar.radio("", ["Overview", "Market Explorer", "Site Analysis", "Compare Markets", "Model Insights", "AI Analyst"],
+                         label_visibility="collapsed")
+
+st.sidebar.markdown("---")
+st.sidebar.markdown("**Score weights**")
+w_demand = st.sidebar.slider("Demand", 0.0, 0.6, DEFAULT_WEIGHTS["demand"], 0.05)
+w_access = st.sidebar.slider("Accessibility", 0.0, 0.6, DEFAULT_WEIGHTS["accessibility"], 0.05)
+w_gap = st.sidebar.slider("Market gap", 0.0, 0.6, DEFAULT_WEIGHTS["market_gap"], 0.05)
+w_comp = st.sidebar.slider("Competition penalty", 0.0, 0.6, DEFAULT_WEIGHTS["competition"], 0.05)
+w_cannib = st.sidebar.slider("Cannibalization penalty", 0.0, 0.6, DEFAULT_WEIGHTS["cannibalization"], 0.05)
+weights = {"demand": w_demand, "accessibility": w_access, "market_gap": w_gap,
+           "competition": w_comp, "cannibalization": w_cannib}
+
