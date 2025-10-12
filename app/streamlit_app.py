@@ -146,3 +146,35 @@ if page == "Overview":
             color_discrete_map=RISK_COLORS, hover_name="label",
             labels={"cannibalization_score": "Cannibalization risk score", "opportunity_score": "Opportunity score"},
             height=420,
+        )
+        fig3.update_layout(plot_bgcolor="white", paper_bgcolor="white", margin=dict(l=0, r=0, t=10, b=0))
+        st.plotly_chart(fig3, use_container_width=True)
+
+# ---------------- Market Explorer ----------------
+elif page == "Market Explorer":
+    st.markdown("# Market Explorer")
+    st.markdown('<div class="subtitle">Every candidate site and existing hotel on the map. Color = opportunity score, size = population density.</div>', unsafe_allow_html=True)
+
+    show_competitors = st.checkbox("Show competitor hotels", True)
+    show_portfolio = st.checkbox("Show our portfolio hotels", True)
+    show_candidates = st.checkbox("Show candidate sites", True)
+
+    fig = go.Figure()
+    if show_candidates:
+        fig.add_trace(go.Scattermapbox(
+            lat=scored["lat"], lon=scored["lon"], mode="markers",
+            marker=dict(size=8, color=scored["opportunity_score"], colorscale=[[0, "#D8DEE4"], [1, ACCENT]],
+                        showscale=True, colorbar=dict(title="Opportunity")),
+            text=scored["label"] + "<br>Score: " + scored["opportunity_score"].astype(str),
+            hoverinfo="text", name="Candidate sites",
+        ))
+    if show_competitors:
+        comp = hotels[~hotels["is_portfolio"]]
+        fig.add_trace(go.Scattermapbox(
+            lat=comp["lat"], lon=comp["lon"], mode="markers",
+            marker=dict(size=5, color="#B25A3E"), text=comp["name"] + " (" + comp["tier"] + ")",
+            hoverinfo="text", name="Competitor hotels",
+        ))
+    if show_portfolio:
+        port = hotels[hotels["is_portfolio"]]
+        fig.add_trace(go.Scattermapbox(
