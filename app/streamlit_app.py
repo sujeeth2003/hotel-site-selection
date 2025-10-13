@@ -198,3 +198,27 @@ elif page == "Site Analysis":
     cid = choice.split(" — ")[0]
     row = scored[scored["candidate_id"] == cid].iloc[0]
 
+    c1, c2, c3, c4 = st.columns(4)
+    c1.metric("Opportunity score", f"{row['opportunity_score']:.0f} / 100")
+    c2.metric("Demand", row["demand_label"])
+    c3.metric("Competition", row["competition_label"])
+    c4.metric("Cannibalization risk", row["cannibalization_risk_level"])
+
+    col1, col2 = st.columns([1.1, 1])
+    with col1:
+        st.markdown("## Score breakdown")
+        exp = explain_score(row, weights)
+        wf = go.Figure(go.Waterfall(
+            orientation="v",
+            measure=["relative", "relative", "relative", "relative", "relative", "total"],
+            x=["Demand", "Accessibility", "Market gap", "Competition", "Cannibalization", "Final score"],
+            y=[exp["demand_contribution"], exp["accessibility_contribution"], exp["market_gap_contribution"],
+               exp["competition_contribution"], exp["cannibalization_contribution"], exp["final_score"]],
+            connector=dict(line=dict(color=NEUTRAL_MED)),
+            decreasing=dict(marker=dict(color="#B25A3E")),
+            increasing=dict(marker=dict(color=ACCENT)),
+            totals=dict(marker=dict(color=NEUTRAL_DARK)),
+        ))
+        wf.update_layout(height=380, plot_bgcolor="white", paper_bgcolor="white", margin=dict(l=0, r=0, t=10, b=0))
+        st.plotly_chart(wf, use_container_width=True)
+
