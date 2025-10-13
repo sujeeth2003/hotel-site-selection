@@ -178,3 +178,23 @@ elif page == "Market Explorer":
     if show_portfolio:
         port = hotels[hotels["is_portfolio"]]
         fig.add_trace(go.Scattermapbox(
+            lat=port["lat"], lon=port["lon"], mode="markers",
+            marker=dict(size=7, color="#4A8A6F", symbol="star"), text=port["name"],
+            hoverinfo="text", name="Our portfolio",
+        ))
+    fig.update_layout(
+        mapbox=dict(style="carto-positron", center=dict(lat=38.92, lon=-77.15), zoom=9),
+        height=680, margin=dict(l=0, r=0, t=0, b=0),
+        legend=dict(orientation="h", y=1.02),
+    )
+    st.plotly_chart(fig, use_container_width=True)
+
+# ---------------- Site Analysis ----------------
+elif page == "Site Analysis":
+    st.markdown("# Site Analysis")
+    site_options = scored.sort_values("opportunity_score", ascending=False)
+    choice = st.selectbox("Select a candidate site", site_options["candidate_id"] + " — " + site_options["label"] +
+                           " (score " + site_options["opportunity_score"].astype(str) + ")")
+    cid = choice.split(" — ")[0]
+    row = scored[scored["candidate_id"] == cid].iloc[0]
+
