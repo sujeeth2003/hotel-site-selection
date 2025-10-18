@@ -260,3 +260,17 @@ elif page == "Compare Markets":
         table = rows[list(display_cols.keys())].rename(columns=display_cols).set_index("Site").T
         st.dataframe(table, use_container_width=True)
 
+        fig = go.Figure()
+        for _, r in rows.iterrows():
+            fig.add_trace(go.Scatterpolar(
+                r=[r["demand_score"], r["accessibility_score"], r["market_gap_score"],
+                   100 - r["competition_penalty"], 100 - r["cannibalization_score"]],
+                theta=["Demand", "Accessibility", "Market gap", "Low competition", "Low cannibalization"],
+                fill="toself", name=r["label"],
+            ))
+        fig.update_layout(polar=dict(radialaxis=dict(visible=True, range=[0, 100])), height=480,
+                           margin=dict(l=40, r=40, t=20, b=20))
+        st.plotly_chart(fig, use_container_width=True)
+    else:
+        st.caption("Select at least two sites.")
+
