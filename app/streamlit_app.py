@@ -274,3 +274,21 @@ elif page == "Compare Markets":
     else:
         st.caption("Select at least two sites.")
 
+# ---------------- Model Insights ----------------
+elif page == "Model Insights":
+    st.markdown("# Model Insights")
+    st.markdown('<div class="subtitle">Predicting a proxy "Market Performance Index" — see limitation note below.</div>', unsafe_allow_html=True)
+
+    col1, col2 = st.columns([1, 1.2])
+    with col1:
+        st.markdown("## Model comparison")
+        st.dataframe(model_results, use_container_width=True, hide_index=True)
+        st.caption(f"Best model: **{meta['best_model']}**. Market segmentation: k={meta['n_clusters']} "
+                   f"clusters, silhouette score {meta['silhouette']}.")
+    with col2:
+        st.markdown("## Feature importance")
+        fig = px.bar(importances.head(10).sort_values("importance"), x="importance", y="feature", orientation="h",
+                     color_discrete_sequence=[ACCENT], height=380)
+        fig.update_layout(plot_bgcolor="white", paper_bgcolor="white", margin=dict(l=0, r=10, t=10, b=10))
+        st.plotly_chart(fig, use_container_width=True)
+
