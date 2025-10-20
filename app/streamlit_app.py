@@ -292,3 +292,18 @@ elif page == "Model Insights":
         fig.update_layout(plot_bgcolor="white", paper_bgcolor="white", margin=dict(l=0, r=10, t=10, b=10))
         st.plotly_chart(fig, use_container_width=True)
 
+    st.markdown("## Market segments")
+    seg_summary = scored.groupby("cluster_name").agg(
+        sites=("candidate_id", "count"), avg_opportunity=("opportunity_score", "mean"),
+        avg_pop_density=("pop_density_per_sqmi", "mean"), avg_competitors=("competitors_within_3mi", "mean"),
+    ).round(1).reset_index()
+    st.dataframe(seg_summary, use_container_width=True, hide_index=True)
+
+    st.warning(
+        "**Limitation:** No public hotel occupancy/ADR/revenue-by-location dataset was available for this "
+        "environment. The model target (Market Performance Index) is a documented synthetic proxy built from "
+        "raw demand/accessibility/competition variables with injected noise — not real performance data. "
+        "R² is intentionally moderate because the proxy includes noise the model cannot learn. Treat model "
+        "outputs directionally, not as revenue forecasts."
+    )
+
