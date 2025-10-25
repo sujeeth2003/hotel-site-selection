@@ -17,3 +17,14 @@
 | Airports | FAA / OurAirports | Public domain | Cross-check against reference POIs |
 | Administrative boundaries | US Census TIGER/Line | Public domain | For region-scope expansion beyond DC/MD/VA |
 
+## Why generated data was used here
+
+This execution environment's network egress is restricted to package
+registries (pip/npm/GitHub) — it cannot reach the Census API or OSM Overpass.
+Rather than fabricate an ingestion module that pretends to hit those APIs, or
+skip the geospatial layer entirely, this build generates data anchored to
+real landmark coordinates and calibrated to realistic regional magnitudes,
+and documents this limitation everywhere it's relevant (README, in-app
+warning on the Model Insights page, this file). Swapping in live sources is a
+rewrite of `src/ingestion/` only — every downstream module (features, scoring,
+modeling) consumes the same schema regardless of where the rows came from.
