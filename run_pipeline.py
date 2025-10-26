@@ -31,3 +31,22 @@ def main():
         AIRPORTS, UNIVERSITIES, HOSPITALS, ATTRACTIONS, HIGHWAYS, CONVENTION_CENTERS,
     )
 
+    print("3/6 Computing opportunity scores...")
+    scored = compute_opportunity_score(feat, DEFAULT_WEIGHTS)
+
+    print("4/6 Training models on proxy Market Performance Index...")
+    y = build_proxy_target(scored)
+    X = scored[FEATURE_COLS].fillna(0)
+    results, best_model, best_name, scaler = compare_models(X, y)
+    importances = feature_importance(best_model, FEATURE_COLS)
+    print(results)
+    print("Best model:", best_name)
+
+    print("5/6 Market segmentation (KMeans)...")
+    labels, k, sil = segment_markets(scored)
+    cluster_names = name_clusters(scored, labels)
+    scored["cluster_id"] = labels
+    scored["cluster_name"] = scored["cluster_id"].map(cluster_names)
+    print(f"k={k}, silhouette={sil}")
+    print(scored["cluster_name"].value_counts())
+
