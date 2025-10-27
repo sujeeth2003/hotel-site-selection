@@ -25,3 +25,12 @@ CREATE TABLE poi (
 CREATE INDEX poi_geom_idx ON poi USING GIST (geom);
 CREATE INDEX poi_category_idx ON poi (category);
 
+CREATE TABLE population (
+    cell_id                     TEXT PRIMARY KEY,
+    pop_density_per_sqmi        NUMERIC,
+    median_income               NUMERIC,
+    business_activity_index     NUMERIC,
+    geom                        GEOMETRY(Point, 4326) NOT NULL
+);
+CREATE INDEX population_geom_idx ON population USING GIST (geom);
+
