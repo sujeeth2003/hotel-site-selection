@@ -34,3 +34,10 @@ CREATE TABLE population (
 );
 CREATE INDEX population_geom_idx ON population USING GIST (geom);
 
+CREATE TABLE candidate_locations (
+    candidate_id    TEXT PRIMARY KEY,
+    label           TEXT,
+    geom            GEOMETRY(Point, 4326) NOT NULL
+);
+CREATE INDEX candidate_geom_idx ON candidate_locations USING GIST (geom);
+
