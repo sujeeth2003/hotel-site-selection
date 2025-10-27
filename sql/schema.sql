@@ -15,3 +15,13 @@ CREATE TABLE hotels (
 );
 CREATE INDEX hotels_geom_idx ON hotels USING GIST (geom);
 
+CREATE TABLE poi (
+    poi_id      SERIAL PRIMARY KEY,
+    category    TEXT NOT NULL,  -- airport | university | hospital | attraction | convention_center | highway | business_district
+    name        TEXT NOT NULL,
+    tier        INTEGER,
+    geom        GEOMETRY(Point, 4326) NOT NULL
+);
+CREATE INDEX poi_geom_idx ON poi USING GIST (geom);
+CREATE INDEX poi_category_idx ON poi (category);
+
