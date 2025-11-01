@@ -42,3 +42,8 @@ def generate_candidates(cell_deg: float = 0.025, seed: int = 3) -> pd.DataFrame:
     df["label"] = [f"Near {n.split('(')[0].strip()}" for n in names]
     return df
 
+
+if __name__ == "__main__":
+    df = generate_candidates()
+    df.to_parquet("data/processed/candidates.parquet", index=False)
+    print(f"Generated {len(df)} candidate sites")
