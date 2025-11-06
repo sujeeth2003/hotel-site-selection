@@ -38,3 +38,15 @@ def nearest_distance_m(candidates_gdf: gpd.GeoDataFrame, targets_gdf: gpd.GeoDat
     return joined.reindex(candidates_gdf.index).values
 
 
+def count_within_radius(candidates_gdf: gpd.GeoDataFrame, targets_gdf: gpd.GeoDataFrame, radius_m: float) -> np.ndarray:
+    """Count of target points within radius_m of each candidate (proper buffer + spatial join)."""
+    if len(targets_gdf) == 0:
+        return np.zeros(len(candidates_gdf), dtype=int)
+    buffers = candidates_gdf.copy()
+    buffers["geometry"] = buffers.geometry.buffer(radius_m)
+    joined = gpd.sjoin(buffers, targets_gdf, predicate="contains", how="left")
+    counts = joined.groupby(joined.index).size()
+    # sjoin drops candidates with zero matches from the groupby result — reindex to fill 0
+    return counts.reindex(candidates_gdf.index, fill_value=0).values
+
+
