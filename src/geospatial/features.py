@@ -50,3 +50,24 @@ def count_within_radius(candidates_gdf: gpd.GeoDataFrame, targets_gdf: gpd.GeoDa
     return counts.reindex(candidates_gdf.index, fill_value=0).values
 
 
+def build_site_features(
+    candidates: pd.DataFrame,
+    hotels: pd.DataFrame,
+    demand_grid: pd.DataFrame,
+    airports: list[dict],
+    universities: list[dict],
+    hospitals: list[dict],
+    attractions: list[dict],
+    highways: list[dict],
+    convention_centers: list[dict],
+) -> pd.DataFrame:
+    """
+    Computes the full geospatial feature set for each candidate location:
+    distance features, radius counts, density features, and demand-surface
+    lookups. All distance/radius math happens in a projected CRS (meters).
+    """
+    cand_gdf = to_projected_gdf(candidates)
+    all_hotels_gdf = to_projected_gdf(hotels)
+    competitor_gdf = to_projected_gdf(hotels[~hotels["is_portfolio"]])
+    portfolio_gdf = to_projected_gdf(hotels[hotels["is_portfolio"]])
+
