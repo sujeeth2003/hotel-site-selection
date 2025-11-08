@@ -71,3 +71,22 @@ def build_site_features(
     competitor_gdf = to_projected_gdf(hotels[~hotels["is_portfolio"]])
     portfolio_gdf = to_projected_gdf(hotels[hotels["is_portfolio"]])
 
+    airports_gdf = to_projected_gdf(pd.DataFrame(airports))
+    universities_gdf = to_projected_gdf(pd.DataFrame(universities))
+    hospitals_gdf = to_projected_gdf(pd.DataFrame(hospitals))
+    attractions_gdf = to_projected_gdf(pd.DataFrame(attractions))
+    highways_gdf = to_projected_gdf(pd.DataFrame(highways))
+    conventions_gdf = to_projected_gdf(pd.DataFrame(convention_centers))
+
+    feat = candidates.copy()
+
+    # --- Distance features (meters -> miles for readability) ---
+    feat["dist_nearest_airport_mi"] = nearest_distance_m(cand_gdf, airports_gdf) / MILE_TO_M
+    feat["dist_nearest_highway_mi"] = nearest_distance_m(cand_gdf, highways_gdf) / MILE_TO_M
+    feat["dist_nearest_competitor_mi"] = nearest_distance_m(cand_gdf, competitor_gdf) / MILE_TO_M
+    feat["dist_nearest_portfolio_hotel_mi"] = nearest_distance_m(cand_gdf, portfolio_gdf) / MILE_TO_M
+    feat["dist_nearest_attraction_mi"] = nearest_distance_m(cand_gdf, attractions_gdf) / MILE_TO_M
+    feat["dist_nearest_university_mi"] = nearest_distance_m(cand_gdf, universities_gdf) / MILE_TO_M
+    feat["dist_nearest_hospital_mi"] = nearest_distance_m(cand_gdf, hospitals_gdf) / MILE_TO_M
+    feat["dist_nearest_convention_center_mi"] = nearest_distance_m(cand_gdf, conventions_gdf) / MILE_TO_M
+
