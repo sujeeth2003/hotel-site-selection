@@ -111,3 +111,8 @@ def build_site_features(
     feat["median_income"] = joined["median_income"].reindex(feat.index).values
     feat["business_activity_index"] = joined["business_activity_index"].reindex(feat.index).values
 
+    # sq-mile area used for hotel density
+    area_1mi_sqmi = np.pi * (1.0) ** 2
+    feat["hotel_density_per_sqmi"] = feat["hotels_within_1mi"] / area_1mi_sqmi
+
+    return feat
