@@ -63,3 +63,9 @@ def generate_grid(cell_deg: float = 0.01) -> pd.DataFrame:
     })
     return df
 
+
+if __name__ == "__main__":
+    df = generate_grid()
+    out = "data/processed/demand_grid.parquet"
+    df.to_parquet(out, index=False)
+    print(f"Generated {len(df)} grid cells -> {out}")
