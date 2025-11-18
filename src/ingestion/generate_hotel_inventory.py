@@ -28,3 +28,15 @@ BRAND_TIERS = {
 TIER_WEIGHTS = {"Economy": 0.25, "Midscale": 0.40, "Upscale": 0.25, "Luxury": 0.10}
 TIER_ROOM_RANGE = {"Economy": (60, 120), "Midscale": (100, 200), "Upscale": (150, 300), "Luxury": (150, 450)}
 
+# "Our" portfolio brand — the fictional client company for this project
+PORTFOLIO_BRAND = "Meridian Stay"
+PORTFOLIO_TIER_SHARE = {"Economy": 0.30, "Midscale": 0.45, "Upscale": 0.20, "Luxury": 0.05}
+
+
+def _jitter_point(lat: float, lon: float, spread_km: float) -> tuple[float, float]:
+    # ~111 km per degree latitude; longitude scaled by cos(latitude)
+    dlat = (RNG.normal(0, spread_km) / 111.0)
+    dlon = (RNG.normal(0, spread_km) / (111.0 * np.cos(np.radians(lat))))
+    return lat + dlat, lon + dlon
+
+
