@@ -46,3 +46,18 @@ def _sample_tier(weights: dict[str, float]) -> str:
     return RNG.choice(tiers, p=p / p.sum())
 
 
+def generate_hotels(n_hotels: int = 420, portfolio_share: float = 0.12) -> pd.DataFrame:
+    """Generate a synthetic hotel market anchored on real business districts/attractions."""
+    anchors = BUSINESS_DISTRICTS + [{"name": a["name"], "lat": a["lat"], "lon": a["lon"]} for a in ATTRACTIONS]
+    # Weight anchors so downtown DC / dense districts get more hotels (realistic density gradient)
+    anchor_weight = np.array([3 if i < len(BUSINESS_DISTRICTS) else 1 for i in range(len(anchors))], dtype=float)
+    anchor_weight = anchor_weight / anchor_weight.sum()
+
+    n_portfolio = int(n_hotels * portfolio_share)
+    rows = []
+    for i in range(n_hotels):
+        anchor = anchors[RNG.choice(len(anchors), p=anchor_weight)]
+        # Denser cores get tighter clustering; add long-tail spread for suburban hotels
+        spread = RNG.choice([1.5, 3.0, 6.0], p=[0.5, 0.3, 0.2])
+        lat, lon = _jitter_point(anchor["lat"], anchor["lon"], spread)
+
