@@ -58,3 +58,23 @@ ATTRACTIONS = [
     {"name": "Great Falls Park", "lat": 38.9977, "lon": -77.2551, "tier": 3},
 ]
 
+BUSINESS_DISTRICTS = [
+    {"name": "Downtown DC / K Street", "lat": 38.9027, "lon": -77.0341},
+    {"name": "Rosslyn-Ballston Corridor (Arlington)", "lat": 38.8951, "lon": -77.0714},
+    {"name": "Tysons Corner", "lat": 38.9187, "lon": -77.2311},
+    {"name": "Bethesda Central Business District", "lat": 38.9847, "lon": -77.0947},
+    {"name": "Silver Spring Downtown", "lat": 38.9959, "lon": -77.0261},
+    {"name": "Reston Town Center", "lat": 38.9586, "lon": -77.3570},
+    {"name": "Crystal City / National Landing", "lat": 38.8563, "lon": -77.0497},
+    {"name": "Alexandria Old Town / Carlyle", "lat": 38.8048, "lon": -77.0469},
+]
+
+HIGHWAYS = [
+    {"name": "I-495 Capital Beltway @ Bethesda", "lat": 38.9847, "lon": -77.1147},
+    {"name": "I-495 Capital Beltway @ Tysons", "lat": 38.9260, "lon": -77.2280},
+    {"name": "I-395 @ Pentagon", "lat": 38.8719, "lon": -77.0563},
+    {"name": "I-95 @ Springfield Interchange", "lat": 38.7893, "lon": -77.1866},
+    {"name": "I-270 @ Rockville", "lat": 39.0840, "lon": -77.1528},
+    {"name": "US-50 @ New Carrollton", "lat": 38.9490, "lon": -76.8716},
+    {"name": "I-66 @ Fair Oaks", "lat": 38.8698, "lon": -77.3564},
+]
