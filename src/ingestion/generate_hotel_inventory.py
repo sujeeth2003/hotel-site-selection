@@ -79,3 +79,13 @@ def generate_hotels(n_hotels: int = 420, portfolio_share: float = 0.12) -> pd.Da
             "near_anchor": anchor["name"],
         })
 
+    df = pd.DataFrame(rows)
+    return df
+
+
+if __name__ == "__main__":
+    df = generate_hotels()
+    out = "data/processed/hotels.parquet"
+    df.to_parquet(out, index=False)
+    print(f"Generated {len(df)} hotels ({df['is_portfolio'].sum()} portfolio) -> {out}")
+    print(df['tier'].value_counts())
