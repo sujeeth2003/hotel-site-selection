@@ -12,3 +12,19 @@ generalizable relationships, not just re-derive the scoring formula). This is
 explicitly a proxy, not real performance data, and is labeled as such
 everywhere it's displayed.
 
+FEATURE_COLS below are the true model inputs (raw geospatial/demand
+variables only — never engineered score components), so the model is
+learning from primary features, same as the scoring engine, but is
+evaluated independently.
+"""
+from __future__ import annotations
+
+import numpy as np
+import pandas as pd
+from sklearn.cluster import KMeans
+from sklearn.ensemble import GradientBoostingRegressor, RandomForestRegressor
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+
