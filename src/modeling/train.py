@@ -28,3 +28,17 @@ from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
+FEATURE_COLS = [
+    "pop_density_per_sqmi", "median_income", "business_activity_index",
+    "dist_nearest_airport_mi", "dist_nearest_highway_mi", "dist_nearest_attraction_mi",
+    "dist_nearest_university_mi", "dist_nearest_hospital_mi", "dist_nearest_convention_center_mi",
+    "hotels_within_1mi", "hotels_within_3mi", "hotels_within_5mi",
+    "competitors_within_3mi", "attractions_within_3mi", "hospitals_within_5mi",
+    "universities_within_5mi", "airports_within_25mi", "hotel_density_per_sqmi",
+]
+
+CLUSTER_COLS = [
+    "pop_density_per_sqmi", "median_income", "hotels_within_3mi", "competitors_within_3mi",
+    "attractions_within_3mi", "business_activity_index", "dist_nearest_airport_mi",
+]
+
