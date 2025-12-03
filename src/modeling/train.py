@@ -65,3 +65,27 @@ def build_proxy_target(feat: pd.DataFrame, seed: int = 11) -> pd.Series:
     pct = pd.Series(raw).rank(pct=True) * 100
     return pct.round(1)
 
+
+def compare_models(X: pd.DataFrame, y: pd.Series) -> tuple[pd.DataFrame, object, str, StandardScaler]:
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=42)
+    scaler = StandardScaler().fit(X_train)
+    X_train_s, X_test_s = scaler.transform(X_train), scaler.transform(X_test)
+
+    candidates = {
+        "Linear Regression": LinearRegression(),
+        "Random Forest": RandomForestRegressor(n_estimators=300, max_depth=8, random_state=42),
+        "Gradient Boosting": GradientBoostingRegressor(n_estimators=300, max_depth=3, learning_rate=0.05, random_state=42),
+    }
+
+    rows, fitted = [], {}
+    for name, model in candidates.items():
+        model.fit(X_train_s, y_train)
+        pred = model.predict(X_test_s)
+        rows.append({
+            "model": name,
+            "MAE": round(mean_absolute_error(y_test, pred), 2),
+            "RMSE": round(mean_squared_error(y_test, pred) ** 0.5, 2),
+            "R2": round(r2_score(y_test, pred), 3),
+        })
+        fitted[name] = model
+
