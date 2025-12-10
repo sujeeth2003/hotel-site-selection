@@ -121,3 +121,21 @@ def segment_markets(feat: pd.DataFrame, k: int | None = None) -> tuple[pd.Series
     else:
         best_sil = silhouette_score(X, KMeans(n_clusters=k, n_init=10, random_state=42).fit_predict(X))
 
+    km = KMeans(n_clusters=k, n_init=10, random_state=42)
+    labels = km.fit_predict(X)
+    return pd.Series(labels, index=feat.index), k, round(best_sil, 3)
+
+
+def name_clusters(feat: pd.DataFrame, labels: pd.Series) -> dict[int, str]:
+    """Derive interpretable cluster names from characteristics (not hardcoded upfront)."""
+    names = {}
+    df = feat.copy()
+    df["_cluster"] = labels
+    overall = df[CLUSTER_COLS].mean()
+    for c, group in df.groupby("_cluster"):
+        gm = group[CLUSTER_COLS].mean()
+        pop_hi = gm["pop_density_per_sqmi"] > overall["pop_density_per_sqmi"]
+        attr_hi = gm["attractions_within_3mi"] > overall["attractions_within_3mi"]
+        comp_hi = gm["competitors_within_3mi"] > overall["competitors_within_3mi"]
+        income_hi = gm["median_income"] > overall["median_income"]
+
