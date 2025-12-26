@@ -28,3 +28,12 @@ def test_radius_count_zero_when_no_targets():
     assert counts[0] == 0
 
 
+def test_radius_count_increases_with_radius():
+    center = pd.DataFrame({"lat": [38.9], "lon": [-77.0]})
+    targets = pd.DataFrame({"lat": [38.9, 38.905, 38.95], "lon": [-77.0, -77.0, -77.0]})
+    c_gdf, t_gdf = to_projected_gdf(center), to_projected_gdf(targets)
+    small = count_within_radius(c_gdf, t_gdf, 1 * MILE_TO_M)[0]
+    large = count_within_radius(c_gdf, t_gdf, 10 * MILE_TO_M)[0]
+    assert large >= small
+
+
