@@ -37,3 +37,25 @@ def test_radius_count_increases_with_radius():
     assert large >= small
 
 
+def _minimal_feature_frame(n=30, seed=0):
+    rng = np.random.default_rng(seed)
+    return pd.DataFrame({
+        "candidate_id": [f"S{i}" for i in range(n)],
+        "label": [f"site {i}" for i in range(n)],
+        "pop_density_per_sqmi": rng.uniform(500, 12000, n),
+        "median_income": rng.uniform(45000, 140000, n),
+        "business_activity_index": rng.uniform(0, 100, n),
+        "attractions_within_3mi": rng.integers(0, 10, n),
+        "dist_nearest_hospital_mi": rng.uniform(0, 10, n),
+        "dist_nearest_university_mi": rng.uniform(0, 10, n),
+        "dist_nearest_airport_mi": rng.uniform(0, 30, n),
+        "dist_nearest_highway_mi": rng.uniform(0, 10, n),
+        "dist_nearest_convention_center_mi": rng.uniform(0, 30, n),
+        "hotels_within_3mi": rng.integers(0, 40, n),
+        "competitors_within_3mi": rng.integers(0, 30, n),
+        "dist_nearest_competitor_mi": rng.uniform(0, 10, n),
+        "portfolio_hotels_within_3mi": rng.integers(0, 5, n),
+        "portfolio_hotels_within_5mi": rng.integers(0, 8, n),
+        "dist_nearest_portfolio_hotel_mi": rng.uniform(0, 15, n),
+    })
+
