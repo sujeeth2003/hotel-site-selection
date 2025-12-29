@@ -59,3 +59,11 @@ def _minimal_feature_frame(n=30, seed=0):
         "dist_nearest_portfolio_hotel_mi": rng.uniform(0, 15, n),
     })
 
+
+def test_opportunity_score_bounded_0_100():
+    feat = _minimal_feature_frame()
+    scored = compute_opportunity_score(feat, DEFAULT_WEIGHTS)
+    assert scored["opportunity_score"].min() >= 0
+    assert scored["opportunity_score"].max() <= 100
+
+
