@@ -7,3 +7,12 @@ An independent portfolio project modeling a real hotel-industry decision:
 > hotel market analysis and site-selection workflows. It uses generated/public
 > reference data and does not use any proprietary company data.
 
+## What it does
+
+Given a candidate site, the engine scores it on demand, accessibility, competition,
+and cannibalization of the company's own existing portfolio, using real geospatial
+calculations (projected-CRS distances, radius counts, density surfaces) — not
+hardcoded numbers. It generates and ranks candidate sites across the region,
+segments markets with unsupervised clustering, and includes an AI analyst that
+answers natural-language questions by calling tools over the real dataset.
+
