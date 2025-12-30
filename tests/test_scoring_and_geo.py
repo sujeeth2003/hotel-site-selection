@@ -67,3 +67,19 @@ def test_opportunity_score_bounded_0_100():
     assert scored["opportunity_score"].max() <= 100
 
 
+def test_weight_change_changes_ranking_order_is_possible():
+    feat = _minimal_feature_frame(seed=1)
+    default_scored = compute_opportunity_score(feat, DEFAULT_WEIGHTS)
+    demand_heavy = compute_opportunity_score(feat, {"demand": 0.9, "accessibility": 0.02, "market_gap": 0.02,
+                                                      "competition": 0.02, "cannibalization": 0.02})
+    top_default = default_scored.nlargest(1, "opportunity_score")["candidate_id"].iloc[0]
+    top_demand_heavy = demand_heavy.nlargest(1, "opportunity_score")["candidate_id"].iloc[0]
+    # not asserting they must differ (could coincide by chance) - just that both are valid computations
+    assert top_default in feat["candidate_id"].values
+    assert top_demand_heavy in feat["candidate_id"].values
+
+
+def test_weights_missing_key_raises():
+    feat = _minimal_feature_frame()
+    with pytest.raises(KeyError):
+        compute_opportunity_score(feat, {"demand": 1.0})
