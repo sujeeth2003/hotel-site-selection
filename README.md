@@ -27,3 +27,21 @@ streamlit run app/streamlit_app.py
 Open `http://localhost:8501`. Everything (map, scores, model results, AI analyst)
 is computed by the pipeline you just ran — nothing in the UI is hardcoded.
 
+## Architecture
+
+```
+Reference POIs + generated hotel/demand data (src/ingestion/)
+        |
+Candidate grid generation (src/features/candidates.py)
+        |
+Geospatial feature engineering — projected CRS, real distance/radius math
+(src/geospatial/features.py)
+        |
+Opportunity scoring — transparent, weighted, configurable
+(src/scoring/opportunity_score.py)
+        |
+ML: proxy-target regression + market segmentation (src/modeling/train.py)
+        |
+Streamlit dashboard (app/streamlit_app.py) + AI Analyst tool layer (app/analyst_tools.py)
+```
+
