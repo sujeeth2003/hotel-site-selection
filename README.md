@@ -16,3 +16,14 @@ hardcoded numbers. It generates and ranks candidate sites across the region,
 segments markets with unsupervised clustering, and includes an AI analyst that
 answers natural-language questions by calling tools over the real dataset.
 
+## Quickstart
+
+```bash
+pip install -r requirements.txt
+python run_pipeline.py          # ingest -> features -> score -> model -> save
+streamlit run app/streamlit_app.py
+```
+
+Open `http://localhost:8501`. Everything (map, scores, model results, AI analyst)
+is computed by the pipeline you just ran — nothing in the UI is hardcoded.
+
