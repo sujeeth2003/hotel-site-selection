@@ -52,3 +52,23 @@ Python, GeoPandas, Shapely, PyProj, scikit-learn, Streamlit, Plotly, pytest
 (Anthropic API — optional, for LLM-routed AI Analyst)
 ```
 
+## Methodology summary
+
+- **Geospatial features** are computed in EPSG:6487 (a projected, meter-based CRS
+  for the DC-metro region) — never in raw lat/lon — via `geopandas.sjoin_nearest`
+  and true buffer polygons for radius counts.
+- **Opportunity Score** = weighted combination of percentile-ranked demand,
+  accessibility, and market-gap scores, minus competition and cannibalization
+  penalties. Weights are user-configurable in the sidebar; the score is fully
+  explainable per-site via a waterfall breakdown.
+- **Cannibalization Score** is a separate signal from competition — it only
+  measures proximity to the *company's own* portfolio hotels, since a new hotel
+  near a competitor is a market-share fight, but near your own hotel it's
+  self-cannibalization.
+- **Market segmentation** uses KMeans with k chosen by silhouette score, and
+  cluster labels are derived from each cluster's actual characteristics after
+  fitting (never hardcoded).
+- **ML model** predicts a documented proxy target (see Limitations) using
+  Linear Regression, Random Forest, and Gradient Boosting; the best model by
+  R² is kept and its feature importances are shown.
+
