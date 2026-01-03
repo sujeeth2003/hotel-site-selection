@@ -45,3 +45,10 @@ ML: proxy-target regression + market segmentation (src/modeling/train.py)
 Streamlit dashboard (app/streamlit_app.py) + AI Analyst tool layer (app/analyst_tools.py)
 ```
 
+## Tech stack
+
+```
+Python, GeoPandas, Shapely, PyProj, scikit-learn, Streamlit, Plotly, pytest
+(Anthropic API — optional, for LLM-routed AI Analyst)
+```
+
