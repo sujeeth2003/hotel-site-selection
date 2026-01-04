@@ -72,3 +72,27 @@ Python, GeoPandas, Shapely, PyProj, scikit-learn, Streamlit, Plotly, pytest
   Linear Regression, Random Forest, and Gradient Boosting; the best model by
   R² is kept and its feature importances are shown.
 
+Full detail in `docs/methodology.md` and `docs/data_sources.md`.
+
+## Limitations (read this)
+
+- **No real hotel performance data.** No free, programmatically-accessible
+  dataset of hotel occupancy/ADR/revenue by coordinate exists for this build.
+  The ML target is a documented synthetic *Market Performance Index* — an
+  independently-weighted proxy with injected noise, never presented as real
+  revenue. Model R² is reported honestly (moderate, ~0.26-0.28) rather than
+  inflated.
+- **Hotel inventory and population/income surfaces are generated, not scraped
+  live.** This sandbox's network access does not reach OSM Overpass or the
+  Census API. Generation is anchored to *real* landmark coordinates
+  (`src/ingestion/reference_pois.py` — actual airports, universities,
+  hospitals, business districts) with a distance-decay model calibrated to
+  realistic DC-metro density/income magnitudes, so market *shape* is
+  plausible even though individual hotel records are synthetic. Swapping in
+  live OSM/Census pulls only requires rewriting `src/ingestion/*` — the
+  geospatial/scoring/modeling layers already consume the same schema.
+- **Region scope** is DC + Maryland + Northern Virginia, as specified.
+- **No PostgreSQL/PostGIS or FastAPI layer yet** — this build uses Parquet +
+  GeoPandas locally, which is correct and sufficient at this data volume, and
+  is a straightforward migration (schema sketched in `sql/schema.sql`).
+
