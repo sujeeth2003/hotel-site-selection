@@ -55,3 +55,17 @@ def compare_markets(df: pd.DataFrame, label_a: str, label_b: str) -> tuple[pd.Se
 
 # ---------------- Fallback deterministic router (no external LLM needed) ----------------
 
+def _fmt_row(r) -> str:
+    return (f"**{r['label']}** — Opportunity {r['opportunity_score']:.0f}, demand {r['demand_label'].lower()}, "
+            f"competition {r['competition_label'].lower()}, cannibalization {r['cannibalization_risk_level'].lower()}")
+
+
+def answer_question(question: str, df: pd.DataFrame) -> str:
+    if os.environ.get("ANTHROPIC_API_KEY"):
+        try:
+            return route_with_claude(question, df)
+        except Exception:
+            pass  # fall through to deterministic router
+
+    q = question.lower()
+
