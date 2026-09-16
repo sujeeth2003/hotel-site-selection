@@ -14,3 +14,11 @@ understanding. This mirrors the required architecture:
 """
 from __future__ import annotations
 
+import os
+import re
+
+import pandas as pd
+
+
+# ---------------- Tools: every one queries the real scored DataFrame ----------------
+
