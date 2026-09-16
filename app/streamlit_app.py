@@ -222,3 +222,24 @@ elif page == "Site Analysis":
         wf.update_layout(height=380, plot_bgcolor="white", paper_bgcolor="white", margin=dict(l=0, r=0, t=10, b=0))
         st.plotly_chart(wf, use_container_width=True)
 
+    with col2:
+        st.markdown("## Nearby context")
+        st.write(f"**{int(row['hotels_within_3mi'])}** hotels within 3 mi · **{int(row['competitors_within_3mi'])}** competitors within 3 mi")
+        st.write(f"**{row['dist_nearest_airport_mi']:.1f} mi** to nearest airport")
+        st.write(f"**{row['dist_nearest_highway_mi']:.1f} mi** to nearest highway")
+        st.write(f"**{row['dist_nearest_attraction_mi']:.1f} mi** to nearest attraction")
+        st.write(f"**{int(row['attractions_within_3mi'])}** attractions within 3 mi")
+        st.write(f"**{row['dist_nearest_portfolio_hotel_mi']:.1f} mi** to nearest of our own hotels")
+        st.write(f"Population density: **{row['pop_density_per_sqmi']:,.0f}/sq mi** · Median income: **${row['median_income']:,.0f}**")
+        st.write(f"Market segment: **{row['cluster_name']}**")
+
+    st.markdown("## Recommendation")
+    demand_word = row["demand_label"].lower()
+    comp_word = row["competition_label"].lower()
+    cannib_word = row["cannibalization_risk_level"].lower()
+    st.info(
+        f"{'Strong' if row['opportunity_score'] >= 70 else 'Moderate' if row['opportunity_score'] >= 45 else 'Weak'} "
+        f"candidate market. Demand indicators are {demand_word} while nearby competition is {comp_word}. "
+        f"Estimated cannibalization of our existing portfolio is {cannib_word}."
+    )
+
