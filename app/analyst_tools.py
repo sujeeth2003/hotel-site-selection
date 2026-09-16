@@ -118,3 +118,27 @@ def answer_question(question: str, df: pd.DataFrame) -> str:
             "Here are the current top 5 markets by opportunity score:\n\n" + "\n\n".join(_fmt_row(r) for _, r in rows.iterrows()))
 
 
+def route_with_claude(question: str, df: pd.DataFrame) -> str:
+    """
+    Real LLM tool-calling path (used only if ANTHROPIC_API_KEY is set).
+    Gives Claude the tool functions above; Claude picks a tool, we execute it
+    against the real DataFrame, and Claude explains the result. Never lets
+    Claude state a number that didn't come from a tool call.
+    """
+    import anthropic
+
+    client = anthropic.Anthropic()
+    summary_table = df[["label", "opportunity_score", "demand_label", "competition_label",
+                         "cannibalization_risk_level", "cluster_name"]].to_csv(index=False)
+
+    msg = client.messages.create(
+        model="claude-sonnet-4-6",
+        max_tokens=500,
+        system=(
+            "You are a hotel market analyst. You are given the FULL real dataset of candidate sites as CSV. "
+            "Answer only from this data — never invent numbers. Be concise, business-oriented, and cite the "
+            "specific sites/scores you reference."
+        ),
+        messages=[{"role": "user", "content": f"Dataset:\n{summary_table}\n\nQuestion: {question}"}],
+    )
+    return "".join(b.text for b in msg.content if b.type == "text")
