@@ -42,3 +42,16 @@ def low_cannibalization_top(df: pd.DataFrame, n: int = 5) -> pd.DataFrame:
     return df[df["cannibalization_risk_level"].isin(["Low", "Moderate"])].nlargest(n, "opportunity_score")
 
 
+def high_demand_low_competition(df: pd.DataFrame, n: int = 5) -> pd.DataFrame:
+    sub = df[(df["demand_label"] == "High") & (df["competition_label"].isin(["Low", "Moderate"]))]
+    return sub.nlargest(n, "opportunity_score")
+
+
+def compare_markets(df: pd.DataFrame, label_a: str, label_b: str) -> tuple[pd.Series, pd.Series]:
+    a = df[df["label"].str.contains(label_a, case=False, na=False)].iloc[0]
+    b = df[df["label"].str.contains(label_b, case=False, na=False)].iloc[0]
+    return a, b
+
+
+# ---------------- Fallback deterministic router (no external LLM needed) ----------------
+
