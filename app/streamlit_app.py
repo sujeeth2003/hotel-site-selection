@@ -96,3 +96,21 @@ w_cannib = st.sidebar.slider("Cannibalization penalty", 0.0, 0.6, DEFAULT_WEIGHT
 weights = {"demand": w_demand, "accessibility": w_access, "market_gap": w_gap,
            "competition": w_comp, "cannibalization": w_cannib}
 
+scored = compute_opportunity_score(st.session_state["_base_features"], weights)
+st.sidebar.caption("Adjust and every score/rank on this page recalculates.")
+
+# ---------------- Overview ----------------
+if page == "Overview":
+    st.markdown("# Hotel Market Opportunity & Site Selection Engine")
+    st.markdown('<div class="subtitle">Where should we consider opening the next hotel? Demand, competition, '
+                'accessibility, and portfolio cannibalization for every candidate site in the region.</div>',
+                unsafe_allow_html=True)
+
+    c1, c2, c3, c4, c5 = st.columns(5)
+    c1.metric("Candidate sites analyzed", len(scored))
+    c2.metric("Existing hotels tracked", len(hotels))
+    c3.metric("Top opportunity score", f"{scored['opportunity_score'].max():.0f}")
+    c4.metric("Median opportunity score", f"{scored['opportunity_score'].median():.0f}")
+    high_risk = (scored["cannibalization_risk_level"].isin(["High", "Very High"])).sum()
+    c5.metric("High cannibalization-risk sites", high_risk)
+
