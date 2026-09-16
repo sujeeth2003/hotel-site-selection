@@ -243,3 +243,20 @@ elif page == "Site Analysis":
         f"Estimated cannibalization of our existing portfolio is {cannib_word}."
     )
 
+# ---------------- Compare Markets ----------------
+elif page == "Compare Markets":
+    st.markdown("# Compare Markets")
+    options = scored["candidate_id"] + " — " + scored["label"]
+    picks = st.multiselect("Select 2-4 candidate sites to compare", options, default=list(options.head(3)))
+    if len(picks) >= 2:
+        ids = [p.split(" — ")[0] for p in picks]
+        rows = scored[scored["candidate_id"].isin(ids)]
+        display_cols = {
+            "label": "Site", "opportunity_score": "Opportunity", "demand_score": "Demand",
+            "accessibility_score": "Accessibility", "competition_penalty": "Competition",
+            "cannibalization_score": "Cannibalization", "hotels_within_3mi": "Hotels (3mi)",
+            "dist_nearest_airport_mi": "Airport dist (mi)", "cluster_name": "Segment",
+        }
+        table = rows[list(display_cols.keys())].rename(columns=display_cols).set_index("Site").T
+        st.dataframe(table, use_container_width=True)
+
