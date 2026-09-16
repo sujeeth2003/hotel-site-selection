@@ -69,3 +69,22 @@ def answer_question(question: str, df: pd.DataFrame) -> str:
 
     q = question.lower()
 
+    if "prioritize" in q or "best market" in q or "which market should we" in q:
+        top = rank_markets(df, 1).iloc[0]
+        second = rank_markets(df, 2).iloc[1]
+        diff = top["opportunity_score"] - second["opportunity_score"]
+        return (f"**Top recommendation: {top['label']}**\n\nOpportunity score: {top['opportunity_score']:.0f}\n\n"
+                f"Why:\n- {top['demand_label']} demand\n- {top['accessibility_label']} accessibility\n"
+                f"- {top['competition_label']} competitive density\n- {top['cannibalization_risk_level']} estimated cannibalization\n\n"
+                f"Compared with the next-best site ({second['label']}), it scores {diff:.1f} points higher.")
+
+    if "low cannibalization" in q or "cannibalization" in q and ("top" in q or "low" in q):
+        rows = low_cannibalization_top(df, 5)
+        return "**Top candidate markets with low/moderate cannibalization risk:**\n\n" + "\n\n".join(_fmt_row(r) for _, r in rows.iterrows())
+
+    if ("high demand" in q and "low competition" in q) or "demand but low" in q:
+        rows = high_demand_low_competition(df, 5)
+        if rows.empty:
+            return "No candidate sites currently combine high demand with low/moderate competition in this dataset."
+        return "**Markets with high demand and low/moderate competition:**\n\n" + "\n\n".join(_fmt_row(r) for _, r in rows.iterrows())
+
