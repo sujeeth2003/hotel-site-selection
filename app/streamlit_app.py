@@ -114,3 +114,35 @@ if page == "Overview":
     high_risk = (scored["cannibalization_risk_level"].isin(["High", "Very High"])).sum()
     c5.metric("High cannibalization-risk sites", high_risk)
 
+    st.markdown("## Top candidate markets")
+    top20 = scored.nlargest(20, "opportunity_score")
+    fig = px.bar(
+        top20.sort_values("opportunity_score"), x="opportunity_score", y="label",
+        orientation="h", color="cannibalization_risk_level",
+        color_discrete_map=RISK_COLORS,
+        labels={"opportunity_score": "Opportunity score", "label": "", "cannibalization_risk_level": "Cannibalization risk"},
+        height=560,
+    )
+    fig.update_layout(plot_bgcolor="white", paper_bgcolor="white", margin=dict(l=0, r=10, t=10, b=10),
+                       legend=dict(orientation="h", y=1.05))
+    st.plotly_chart(fig, use_container_width=True)
+
+    col1, col2 = st.columns(2)
+    with col1:
+        st.markdown("## Demand vs. competition")
+        fig2 = px.scatter(
+            scored, x="competition_penalty", y="demand_score", color="opportunity_score",
+            size="pop_density_per_sqmi", hover_name="label",
+            color_continuous_scale=["#D8DEE4", ACCENT_LIGHT, ACCENT],
+            labels={"competition_penalty": "Competition", "demand_score": "Demand", "opportunity_score": "Opportunity"},
+            height=420,
+        )
+        fig2.update_layout(plot_bgcolor="white", paper_bgcolor="white", margin=dict(l=0, r=0, t=10, b=0))
+        st.plotly_chart(fig2, use_container_width=True)
+    with col2:
+        st.markdown("## Opportunity vs. cannibalization risk")
+        fig3 = px.scatter(
+            scored, x="cannibalization_score", y="opportunity_score", color="cannibalization_risk_level",
+            color_discrete_map=RISK_COLORS, hover_name="label",
+            labels={"cannibalization_score": "Cannibalization risk score", "opportunity_score": "Opportunity score"},
+            height=420,
