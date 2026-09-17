@@ -325,3 +325,11 @@ elif page == "AI Analyst":
             st.session_state.chat.append(("user", ex))
             st.session_state.chat.append(("assistant", answer_question(ex, scored)))
 
+    q = st.chat_input("Ask a question about the candidate markets...")
+    if q:
+        st.session_state.chat.append(("user", q))
+        st.session_state.chat.append(("assistant", answer_question(q, scored)))
+
+    for role, msg in st.session_state.chat:
+        with st.chat_message(role):
+            st.markdown(msg)
