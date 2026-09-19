@@ -1,0 +1,10 @@
+{
+  "best_model": "Gradient Boosting",
+  "silhouette": 0.439,
+  "n_clusters": 3,
+  "cluster_names": {
+    "0": "Low-Density Emerging Market",
+    "1": "Dense Urban Business Market",
+    "2": "Dense Urban Business Market"
+  }
+}
