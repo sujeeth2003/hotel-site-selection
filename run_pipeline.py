@@ -50,3 +50,20 @@ def main():
     print(f"k={k}, silhouette={sil}")
     print(scored["cluster_name"].value_counts())
 
+    print("6/6 Saving artifacts...")
+    scored.to_parquet("data/processed/scored_candidates.parquet", index=False)
+    results.to_csv("data/processed/model_comparison.csv", index=False)
+    importances.to_csv("data/processed/feature_importance.csv", index=False)
+    with open("data/processed/model_meta.json", "w") as f:
+        json.dump({
+            "best_model": best_name,
+            "silhouette": sil,
+            "n_clusters": int(k),
+            "cluster_names": {str(k_): v for k_, v in cluster_names.items()},
+        }, f, indent=2)
+
+    print(f"Done in {time.time()-t0:.1f}s. {len(scored)} scored candidates, {len(hotels)} hotels.")
+
+
+if __name__ == "__main__":
+    main()
