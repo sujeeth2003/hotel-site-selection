@@ -22,3 +22,9 @@ MILE_TO_M = 1609.344
 KM_TO_M = 1000.0
 
 
+def to_projected_gdf(df: pd.DataFrame, lat_col: str = "lat", lon_col: str = "lon") -> gpd.GeoDataFrame:
+    geometry = [Point(xy) for xy in zip(df[lon_col], df[lat_col])]
+    gdf = gpd.GeoDataFrame(df.copy(), geometry=geometry, crs=GEOGRAPHIC_CRS)
+    return gdf.to_crs(PROJECTED_CRS)
+
+
