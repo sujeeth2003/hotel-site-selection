@@ -28,3 +28,13 @@ def to_projected_gdf(df: pd.DataFrame, lat_col: str = "lat", lon_col: str = "lon
     return gdf.to_crs(PROJECTED_CRS)
 
 
+def nearest_distance_m(candidates_gdf: gpd.GeoDataFrame, targets_gdf: gpd.GeoDataFrame) -> np.ndarray:
+    """Distance in meters from each candidate to the nearest target geometry."""
+    if len(targets_gdf) == 0:
+        return np.full(len(candidates_gdf), np.nan)
+    joined = gpd.sjoin_nearest(candidates_gdf, targets_gdf, distance_col="_dist_m", how="left")
+    # sjoin_nearest can duplicate rows on ties — keep the closest per candidate
+    joined = joined.groupby(joined.index)["_dist_m"].min()
+    return joined.reindex(candidates_gdf.index).values
+
+
