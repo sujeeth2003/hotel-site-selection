@@ -25,3 +25,20 @@ def generate_candidates(cell_deg: float = 0.025, seed: int = 3) -> pd.DataFrame:
     grid_lat = grid_lat + rng.normal(0, cell_deg * 0.15, len(grid_lat))
     grid_lon = grid_lon + rng.normal(0, cell_deg * 0.15, len(grid_lon))
 
+    df = pd.DataFrame({
+        "candidate_id": [f"S{i:04d}" for i in range(len(grid_lat))],
+        "lat": grid_lat,
+        "lon": grid_lon,
+    })
+
+    # Label nearest business district for a human-readable name
+    names, dists = [], []
+    for lat, lon in zip(df["lat"], df["lon"]):
+        d = [((lat - b["lat"]) ** 2 + (lon - b["lon"]) ** 2) ** 0.5 for b in BUSINESS_DISTRICTS]
+        idx = int(np.argmin(d))
+        names.append(BUSINESS_DISTRICTS[idx]["name"])
+        dists.append(d[idx])
+    df["nearest_district"] = names
+    df["label"] = [f"Near {n.split('(')[0].strip()}" for n in names]
+    return df
+
