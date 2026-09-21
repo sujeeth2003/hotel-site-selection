@@ -30,3 +30,19 @@ def _haversine_km(lat1, lon1, lat2, lon2):
     return 2 * r * np.arcsin(np.sqrt(a))
 
 
+def generate_grid(cell_deg: float = 0.01) -> pd.DataFrame:
+    lats = np.arange(REGION_BOUNDS["lat_min"], REGION_BOUNDS["lat_max"], cell_deg)
+    lons = np.arange(REGION_BOUNDS["lon_min"], REGION_BOUNDS["lon_max"], cell_deg)
+    grid_lat, grid_lon = np.meshgrid(lats, lons)
+    grid_lat, grid_lon = grid_lat.ravel(), grid_lon.ravel()
+
+    n = len(grid_lat)
+    min_dist = np.full(n, np.inf)
+    for d in BUSINESS_DISTRICTS:
+        dist = _haversine_km(grid_lat, grid_lon, d["lat"], d["lon"])
+        min_dist = np.minimum(min_dist, dist)
+
+    # Distance-decay density model, roughly calibrated to DC-metro magnitudes
+    density = 11000 * np.exp(-min_dist / 4.5) + 900 + RNG.normal(0, 250, n)
+    density = np.clip(density, 150, None)
+
