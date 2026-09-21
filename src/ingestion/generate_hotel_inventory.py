@@ -12,3 +12,19 @@ though individual hotel identities are synthetic.
 """
 from __future__ import annotations
 
+import numpy as np
+import pandas as pd
+
+from src.ingestion.reference_pois import BUSINESS_DISTRICTS, ATTRACTIONS
+
+RNG = np.random.default_rng(42)
+
+BRAND_TIERS = {
+    "Economy": ["Value Inn", "Roadside Suites", "Budget Stay"],
+    "Midscale": ["Comfort Court", "Garden Suites", "Park Place Inn"],
+    "Upscale": ["Metro Hotel", "Harbor Suites", "Capital Collection"],
+    "Luxury": ["The Grand", "Regency Tower", "The Meridian"],
+}
+TIER_WEIGHTS = {"Economy": 0.25, "Midscale": 0.40, "Upscale": 0.25, "Luxury": 0.10}
+TIER_ROOM_RANGE = {"Economy": (60, 120), "Midscale": (100, 200), "Upscale": (150, 300), "Luxury": (150, 450)}
+
