@@ -14,3 +14,10 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
+from src.ingestion.reference_pois import BUSINESS_DISTRICTS
+
+RNG = np.random.default_rng(7)
+
+REGION_BOUNDS = {"lat_min": 38.75, "lat_max": 39.10, "lon_min": -77.55, "lon_max": -76.85}
+
+
