@@ -46,3 +46,20 @@ def generate_grid(cell_deg: float = 0.01) -> pd.DataFrame:
     density = 11000 * np.exp(-min_dist / 4.5) + 900 + RNG.normal(0, 250, n)
     density = np.clip(density, 150, None)
 
+    income = 68000 + 55000 * np.exp(-min_dist / 6.0) + RNG.normal(0, 8000, n)
+    income = np.clip(income, 42000, None)
+
+    business_activity = 100 * np.exp(-min_dist / 3.0) + RNG.normal(0, 5, n)
+    business_activity = np.clip(business_activity, 0, None)
+
+    df = pd.DataFrame({
+        "cell_id": [f"C{i:05d}" for i in range(n)],
+        "lat": grid_lat,
+        "lon": grid_lon,
+        "pop_density_per_sqmi": density.round(0),
+        "median_income": income.round(0),
+        "business_activity_index": business_activity.round(1),
+        "dist_to_nearest_business_district_km": min_dist.round(2),
+    })
+    return df
+
