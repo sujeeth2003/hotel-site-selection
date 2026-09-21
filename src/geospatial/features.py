@@ -14,3 +14,11 @@ import numpy as np
 import pandas as pd
 from shapely.geometry import Point
 
+# NAD83 / Maryland (meters) — reasonable low-distortion projection for the DC metro region
+PROJECTED_CRS = "EPSG:6487"
+GEOGRAPHIC_CRS = "EPSG:4326"
+
+MILE_TO_M = 1609.344
+KM_TO_M = 1000.0
+
+
