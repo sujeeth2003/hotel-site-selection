@@ -41,3 +41,17 @@ CREATE TABLE candidate_locations (
 );
 CREATE INDEX candidate_geom_idx ON candidate_locations USING GIST (geom);
 
+CREATE TABLE market_features (
+    candidate_id                    TEXT PRIMARY KEY REFERENCES candidate_locations(candidate_id),
+    dist_nearest_airport_mi         NUMERIC,
+    dist_nearest_highway_mi         NUMERIC,
+    dist_nearest_competitor_mi      NUMERIC,
+    dist_nearest_portfolio_hotel_mi NUMERIC,
+    hotels_within_3mi               INTEGER,
+    competitors_within_3mi          INTEGER,
+    portfolio_hotels_within_3mi     INTEGER,
+    pop_density_per_sqmi            NUMERIC,
+    median_income                   NUMERIC,
+    computed_at                     TIMESTAMPTZ DEFAULT now()
+);
+
