@@ -90,3 +90,24 @@ def build_site_features(
     feat["dist_nearest_hospital_mi"] = nearest_distance_m(cand_gdf, hospitals_gdf) / MILE_TO_M
     feat["dist_nearest_convention_center_mi"] = nearest_distance_m(cand_gdf, conventions_gdf) / MILE_TO_M
 
+    # --- Radius-based counts ---
+    feat["hotels_within_1mi"] = count_within_radius(cand_gdf, all_hotels_gdf, 1 * MILE_TO_M)
+    feat["hotels_within_3mi"] = count_within_radius(cand_gdf, all_hotels_gdf, 3 * MILE_TO_M)
+    feat["hotels_within_5mi"] = count_within_radius(cand_gdf, all_hotels_gdf, 5 * MILE_TO_M)
+    feat["competitors_within_3mi"] = count_within_radius(cand_gdf, competitor_gdf, 3 * MILE_TO_M)
+    feat["attractions_within_3mi"] = count_within_radius(cand_gdf, attractions_gdf, 3 * MILE_TO_M)
+    feat["hospitals_within_5mi"] = count_within_radius(cand_gdf, hospitals_gdf, 5 * MILE_TO_M)
+    feat["universities_within_5mi"] = count_within_radius(cand_gdf, universities_gdf, 5 * MILE_TO_M)
+    feat["airports_within_25mi"] = count_within_radius(cand_gdf, airports_gdf, 25 * MILE_TO_M)
+    feat["portfolio_hotels_within_3mi"] = count_within_radius(cand_gdf, portfolio_gdf, 3 * MILE_TO_M)
+    feat["portfolio_hotels_within_5mi"] = count_within_radius(cand_gdf, portfolio_gdf, 5 * MILE_TO_M)
+
+    # --- Density / demand-surface features (nearest demand-grid cell lookup) ---
+    grid_gdf = to_projected_gdf(demand_grid)
+    joined = gpd.sjoin_nearest(cand_gdf, grid_gdf[["pop_density_per_sqmi", "median_income", "business_activity_index", "geometry"]],
+                                distance_col="_grid_dist_m", how="left")
+    joined = joined[~joined.index.duplicated(keep="first")]
+    feat["pop_density_per_sqmi"] = joined["pop_density_per_sqmi"].reindex(feat.index).values
+    feat["median_income"] = joined["median_income"].reindex(feat.index).values
+    feat["business_activity_index"] = joined["business_activity_index"].reindex(feat.index).values
+
