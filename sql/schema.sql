@@ -55,3 +55,20 @@ CREATE TABLE market_features (
     computed_at                     TIMESTAMPTZ DEFAULT now()
 );
 
+CREATE TABLE site_scores (
+    candidate_id             TEXT PRIMARY KEY REFERENCES candidate_locations(candidate_id),
+    demand_score              NUMERIC,
+    accessibility_score       NUMERIC,
+    market_gap_score          NUMERIC,
+    competition_penalty       NUMERIC,
+    cannibalization_score     NUMERIC,
+    opportunity_score         NUMERIC,
+    cluster_id                INTEGER,
+    scored_at                 TIMESTAMPTZ DEFAULT now()
+);
+
+-- Example spatial query this schema enables:
+-- SELECT c.candidate_id, count(h.hotel_id) AS hotels_within_3mi
+-- FROM candidate_locations c
+-- JOIN hotels h ON ST_DWithin(c.geom::geography, h.geom::geography, 3 * 1609.34)
+-- GROUP BY c.candidate_id;
