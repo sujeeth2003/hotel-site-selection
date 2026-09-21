@@ -21,3 +21,12 @@ RNG = np.random.default_rng(7)
 REGION_BOUNDS = {"lat_min": 38.75, "lat_max": 39.10, "lon_min": -77.55, "lon_max": -76.85}
 
 
+def _haversine_km(lat1, lon1, lat2, lon2):
+    r = 6371.0
+    p1, p2 = np.radians(lat1), np.radians(lat2)
+    dphi = np.radians(lat2 - lat1)
+    dlmb = np.radians(lon2 - lon1)
+    a = np.sin(dphi / 2) ** 2 + np.cos(p1) * np.cos(p2) * np.sin(dlmb / 2) ** 2
+    return 2 * r * np.arcsin(np.sqrt(a))
+
+
