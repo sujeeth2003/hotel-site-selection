@@ -42,3 +42,26 @@ CLUSTER_COLS = [
     "attractions_within_3mi", "business_activity_index", "dist_nearest_airport_mi",
 ]
 
+
+def build_proxy_target(feat: pd.DataFrame, seed: int = 11) -> pd.Series:
+    """
+    Market Performance Index (0-100), a documented PROXY for real occupancy/
+    revenue potential. Independent weighting from the scoring engine;
+    includes noise so it isn't trivially learnable (deliberately caps
+    achievable R^2, which we report honestly rather than hide).
+    """
+    rng = np.random.default_rng(seed)
+    z = lambda s: (s - s.mean()) / (s.std() + 1e-9)
+    raw = (
+        0.30 * z(feat["pop_density_per_sqmi"])
+        + 0.20 * z(feat["business_activity_index"])
+        + 0.15 * z(feat["attractions_within_3mi"])
+        + 0.15 * z(-feat["dist_nearest_airport_mi"])
+        + 0.10 * z(-feat["dist_nearest_convention_center_mi"])
+        - 0.10 * z(feat["competitors_within_3mi"])
+    )
+    noise = rng.normal(0, 0.6, len(feat))  # substantial noise -> realistic, imperfect model
+    raw = raw + noise
+    pct = pd.Series(raw).rank(pct=True) * 100
+    return pct.round(1)
+
