@@ -89,3 +89,18 @@ def compare_models(X: pd.DataFrame, y: pd.Series) -> tuple[pd.DataFrame, object,
         })
         fitted[name] = model
 
+    results = pd.DataFrame(rows).sort_values("R2", ascending=False).reset_index(drop=True)
+    best_name = results.iloc[0]["model"]
+    return results, fitted[best_name], best_name, scaler
+
+
+def feature_importance(model, feature_names: list[str]) -> pd.DataFrame:
+    if hasattr(model, "feature_importances_"):
+        imp = model.feature_importances_
+    elif hasattr(model, "coef_"):
+        imp = np.abs(model.coef_)
+    else:
+        imp = np.zeros(len(feature_names))
+    df = pd.DataFrame({"feature": feature_names, "importance": imp})
+    return df.sort_values("importance", ascending=False).reset_index(drop=True)
+
