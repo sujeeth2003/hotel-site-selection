@@ -40,3 +40,9 @@ def _jitter_point(lat: float, lon: float, spread_km: float) -> tuple[float, floa
     return lat + dlat, lon + dlon
 
 
+def _sample_tier(weights: dict[str, float]) -> str:
+    tiers = list(weights.keys())
+    p = np.array(list(weights.values()))
+    return RNG.choice(tiers, p=p / p.sum())
+
+
