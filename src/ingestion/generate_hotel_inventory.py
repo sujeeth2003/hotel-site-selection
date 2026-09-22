@@ -61,3 +61,21 @@ def generate_hotels(n_hotels: int = 420, portfolio_share: float = 0.12) -> pd.Da
         spread = RNG.choice([1.5, 3.0, 6.0], p=[0.5, 0.3, 0.2])
         lat, lon = _jitter_point(anchor["lat"], anchor["lon"], spread)
 
+        is_portfolio = i < n_portfolio
+        tier = _sample_tier(PORTFOLIO_TIER_SHARE if is_portfolio else TIER_WEIGHTS)
+        brand = PORTFOLIO_BRAND if is_portfolio else RNG.choice(BRAND_TIERS[tier])
+        lo, hi = TIER_ROOM_RANGE[tier]
+        rooms = int(RNG.integers(lo, hi))
+
+        rows.append({
+            "hotel_id": f"H{i:04d}",
+            "name": f"{brand} {anchor['name'].split(',')[0].split('(')[0].strip()}"[:60],
+            "brand": brand,
+            "is_portfolio": is_portfolio,
+            "tier": tier,
+            "rooms": rooms,
+            "lat": round(lat, 5),
+            "lon": round(lon, 5),
+            "near_anchor": anchor["name"],
+        })
+
