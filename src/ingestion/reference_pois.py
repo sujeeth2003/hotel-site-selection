@@ -37,3 +37,24 @@ HOSPITALS = [
     {"name": "Johns Hopkins Hospital (Baltimore)", "lat": 39.2969, "lon": -76.5928},
 ]
 
+CONVENTION_CENTERS = [
+    {"name": "Walter E. Washington Convention Center", "lat": 38.9046, "lon": -77.0237},
+    {"name": "Gaylord National Convention Center (Oxon Hill)", "lat": 38.7802, "lon": -77.0166},
+    {"name": "Dulles Expo Center (Chantilly)", "lat": 38.8965, "lon": -77.4436},
+]
+
+ATTRACTIONS = [
+    {"name": "National Mall", "lat": 38.8895, "lon": -77.0353, "tier": 1},
+    {"name": "Smithsonian National Air & Space Museum", "lat": 38.8882, "lon": -77.0199, "tier": 1},
+    {"name": "United States Capitol", "lat": 38.8899, "lon": -77.0091, "tier": 1},
+    {"name": "The White House", "lat": 38.8977, "lon": -77.0365, "tier": 1},
+    {"name": "Georgetown Waterfront", "lat": 38.9034, "lon": -77.0611, "tier": 2},
+    {"name": "Union Market", "lat": 38.9088, "lon": -76.9993, "tier": 2},
+    {"name": "Old Town Alexandria", "lat": 38.8048, "lon": -77.0469, "tier": 2},
+    {"name": "National Harbor", "lat": 38.7823, "lon": -77.0161, "tier": 2},
+    {"name": "Nationals Park", "lat": 38.8730, "lon": -77.0074, "tier": 2},
+    {"name": "Capital One Arena", "lat": 38.8981, "lon": -77.0209, "tier": 1},
+    {"name": "Wolf Trap National Park", "lat": 38.9385, "lon": -77.2653, "tier": 3},
+    {"name": "Great Falls Park", "lat": 38.9977, "lon": -77.2551, "tier": 3},
+]
+
