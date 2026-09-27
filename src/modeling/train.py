@@ -139,3 +139,15 @@ def name_clusters(feat: pd.DataFrame, labels: pd.Series) -> dict[int, str]:
         comp_hi = gm["competitors_within_3mi"] > overall["competitors_within_3mi"]
         income_hi = gm["median_income"] > overall["median_income"]
 
+        if pop_hi and comp_hi:
+            label = "Dense Urban Business Market"
+        elif attr_hi and not pop_hi:
+            label = "Tourism-Driven Market"
+        elif income_hi and not pop_hi:
+            label = "Affluent Suburban Market"
+        elif not pop_hi and not comp_hi:
+            label = "Low-Density Emerging Market"
+        else:
+            label = "Suburban Growth Market"
+        names[c] = label
+    return names
