@@ -104,3 +104,20 @@ def feature_importance(model, feature_names: list[str]) -> pd.DataFrame:
     df = pd.DataFrame({"feature": feature_names, "importance": imp})
     return df.sort_values("importance", ascending=False).reset_index(drop=True)
 
+
+def segment_markets(feat: pd.DataFrame, k: int | None = None) -> tuple[pd.Series, int, float]:
+    from sklearn.metrics import silhouette_score
+
+    X = StandardScaler().fit_transform(feat[CLUSTER_COLS].fillna(0))
+
+    if k is None:
+        best_k, best_sil = 3, -1
+        for candidate_k in range(3, 7):
+            labels = KMeans(n_clusters=candidate_k, n_init=10, random_state=42).fit_predict(X)
+            sil = silhouette_score(X, labels)
+            if sil > best_sil:
+                best_k, best_sil = candidate_k, sil
+        k = best_k
+    else:
+        best_sil = silhouette_score(X, KMeans(n_clusters=k, n_init=10, random_state=42).fit_predict(X))
+
