@@ -73,3 +73,18 @@ def compute_component_scores(feat: pd.DataFrame) -> pd.DataFrame:
     return out
 
 
+def compute_opportunity_score(feat: pd.DataFrame, weights: dict | None = None) -> pd.DataFrame:
+    weights = weights or DEFAULT_WEIGHTS
+    out = compute_component_scores(feat)
+
+    out["opportunity_score"] = (
+        weights["demand"] * out["demand_score"]
+        + weights["accessibility"] * out["accessibility_score"]
+        + weights["market_gap"] * out["market_gap_score"]
+        - weights["competition"] * out["competition_penalty"]
+        - weights["cannibalization"] * out["cannibalization_score"]
+    )
+    # Rescale onto 0-100 since subtractive terms can push below/above raw bounds
+    lo, hi = out["opportunity_score"].min(), out["opportunity_score"].max()
+    out["opportunity_score"] = ((out["opportunity_score"] - lo) / (hi - lo) * 100).round(1)
+
