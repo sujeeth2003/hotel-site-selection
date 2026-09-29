@@ -94,3 +94,14 @@ def compute_opportunity_score(feat: pd.DataFrame, weights: dict | None = None) -
     return out
 
 
+def explain_score(row: pd.Series, weights: dict | None = None) -> dict:
+    """Returns the additive contribution of each component to the final score, for display."""
+    weights = weights or DEFAULT_WEIGHTS
+    return {
+        "demand_contribution": round(weights["demand"] * row["demand_score"], 1),
+        "accessibility_contribution": round(weights["accessibility"] * row["accessibility_score"], 1),
+        "market_gap_contribution": round(weights["market_gap"] * row["market_gap_score"], 1),
+        "competition_contribution": round(-weights["competition"] * row["competition_penalty"], 1),
+        "cannibalization_contribution": round(-weights["cannibalization"] * row["cannibalization_score"], 1),
+        "final_score": row["opportunity_score"],
+    }
