@@ -20,3 +20,11 @@ def test_projected_distance_matches_known_value():
     assert 1400 < dist < 1750  # ~1 mile in meters, generous tolerance
 
 
+def test_radius_count_zero_when_no_targets():
+    a = pd.DataFrame({"lat": [38.9], "lon": [-77.0]})
+    empty = pd.DataFrame({"lat": [], "lon": []})
+    a_gdf, empty_gdf = to_projected_gdf(a), to_projected_gdf(empty)
+    counts = count_within_radius(a_gdf, empty_gdf, 5 * MILE_TO_M)
+    assert counts[0] == 0
+
+
