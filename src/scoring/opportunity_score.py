@@ -40,3 +40,22 @@ def compute_component_scores(feat: pd.DataFrame) -> pd.DataFrame:
     )
     out["demand_score"] = demand_raw.clip(0, 100)
 
+    # Accessibility: closer to airport/highway/convention center = better (inverse distance)
+    access_raw = (
+        _pct_rank(-out["dist_nearest_airport_mi"]) * 0.35
+        + _pct_rank(-out["dist_nearest_highway_mi"]) * 0.40
+        + _pct_rank(-out["dist_nearest_convention_center_mi"]) * 0.25
+    )
+    out["accessibility_score"] = access_raw.clip(0, 100)
+
+    # Market gap: high demand relative to existing hotel supply nearby = under-served market
+    supply_pressure = _pct_rank(out["hotels_within_3mi"])
+    out["market_gap_score"] = (out["demand_score"] - 0.6 * supply_pressure).clip(0, 100)
+
+    # Competition penalty: competitor density + proximity to nearest competitor
+    comp_raw = (
+        _pct_rank(out["competitors_within_3mi"]) * 0.6
+        + _pct_rank(-out["dist_nearest_competitor_mi"]) * 0.4
+    )
+    out["competition_penalty"] = comp_raw.clip(0, 100)
+
