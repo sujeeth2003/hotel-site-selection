@@ -96,3 +96,12 @@ Full detail in `docs/methodology.md` and `docs/data_sources.md`.
   GeoPandas locally, which is correct and sufficient at this data volume, and
   is a straightforward migration (schema sketched in `sql/schema.sql`).
 
+## Production architecture (proposed, not deployed)
+
+```
+Public Data Sources (Census, OSM) → S3 → Glue/Lambda → Athena → PostgreSQL/PostGIS
+→ SageMaker (model training) → FastAPI → Streamlit → Bedrock (LLM analyst)
+```
+
+**Implemented locally:** everything above the line. **Proposed only:** AWS deployment.
+
