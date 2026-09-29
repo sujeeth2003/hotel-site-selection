@@ -13,3 +13,12 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
+DEFAULT_WEIGHTS = {
+    "demand": 0.35,
+    "accessibility": 0.20,
+    "market_gap": 0.20,
+    "competition": 0.15,
+    "cannibalization": 0.10,
+}
+
+
