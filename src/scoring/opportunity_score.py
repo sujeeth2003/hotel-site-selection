@@ -88,3 +88,9 @@ def compute_opportunity_score(feat: pd.DataFrame, weights: dict | None = None) -
     lo, hi = out["opportunity_score"].min(), out["opportunity_score"].max()
     out["opportunity_score"] = ((out["opportunity_score"] - lo) / (hi - lo) * 100).round(1)
 
+    out["demand_label"] = pd.cut(out["demand_score"], [-1, 33, 66, 100], labels=["Low", "Moderate", "High"])
+    out["competition_label"] = pd.cut(out["competition_penalty"], [-1, 33, 66, 100], labels=["Low", "Moderate", "High"])
+    out["accessibility_label"] = pd.cut(out["accessibility_score"], [-1, 33, 66, 100], labels=["Fair", "Good", "Excellent"])
+    return out
+
+
