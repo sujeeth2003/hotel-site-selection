@@ -59,3 +59,17 @@ def compute_component_scores(feat: pd.DataFrame) -> pd.DataFrame:
     )
     out["competition_penalty"] = comp_raw.clip(0, 100)
 
+    # Cannibalization: overlap with the company's OWN existing portfolio nearby
+    cannib_raw = (
+        _pct_rank(out["portfolio_hotels_within_3mi"]) * 0.5
+        + _pct_rank(out["portfolio_hotels_within_5mi"]) * 0.3
+        + _pct_rank(-out["dist_nearest_portfolio_hotel_mi"]) * 0.2
+    )
+    out["cannibalization_score"] = cannib_raw.clip(0, 100)
+    out["cannibalization_risk_level"] = pd.cut(
+        out["cannibalization_score"], bins=[-1, 25, 50, 75, 100],
+        labels=["Low", "Moderate", "High", "Very High"]
+    )
+    return out
+
+
