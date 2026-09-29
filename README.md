@@ -49,7 +49,7 @@ Streamlit dashboard (app/streamlit_app.py) + AI Analyst tool layer (app/analyst_
 
 ```
 Python, GeoPandas, Shapely, PyProj, scikit-learn, Streamlit, Plotly, pytest
-(Anthropic API — optional, for LLM-routed AI Analyst)
+(LLM optional — for LLM-routed AI Analyst)
 ```
 
 ## Methodology summary
