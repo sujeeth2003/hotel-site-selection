@@ -105,3 +105,11 @@ Public Data Sources (Census, OSM) → S3 → Glue/Lambda → Athena → PostgreS
 
 **Implemented locally:** everything above the line. **Proposed only:** AWS deployment.
 
+## Tests
+
+```bash
+PYTHONPATH=. pytest tests/ -v
+```
+
+6 passing tests covering projected-CRS distance correctness, radius counting,
+score boundedness, and configuration validation.
